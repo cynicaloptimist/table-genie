@@ -1,0 +1,19 @@
+{
+  "name": "skill-rollme",
+  "version": "1.0.0",
+  "description": "Generate random die rolls, names, et cetera.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "alexa",
+    "skill",
+    "generator"
+  ],
+  "author": "Evan Bailey",
+  "license": "MIT",
+  "dependencies": {
+    "alexa-sdk": "^1.0.7"
+  }
+}
