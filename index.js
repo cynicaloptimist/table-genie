@@ -1,47 +1,26 @@
 'use strict';
 var Alexa = require('alexa-sdk');
-var APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
+var APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";  // TODO replace with your app ID (OPTIONAL).
 
-var languageStrings = {
-    "en": {
-        "translation": {
-            "NAMES": {
-                "HUMAN": [
-                    "Gregorr"
-                ],
-                "ELF": [
-                    "Ellumyr"
-                ],
-                "DWARF": [
-                    "Shem"
-                ],
-                "HALFLING": [
-                    "Underfoot"
-                ],
-            },
-            "LOOT": [
-                "A rusty nail",
-                "A tear stained handkerchief"
-            ],
-            "ROLLED": "I rolled %s",
-            "SKILL_NAME" : "Roll Me",
-            "HELP_MESSAGE" : "You can say roll me one d six plus one, or, you can say roll me an elf name, or roll me some loot. What would you like?",
-            "HELP_REPROMPT" : "What would you like me to roll you?",
-            "STOP_MESSAGE" : "Goodbye!"
-        }
-    }
-};
+var resources = require('resources.js');
 
 exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
     alexa.APP_ID = APP_ID;
-    // To enable string internationalization (i18n) features, set a resources object.
-    alexa.resources = languageStrings;
+    alexa.resources = resources;
     alexa.registerHandlers(handlers);
     alexa.execute();
 };
 
-const rollDice = function (howMany, dieSize, modifier) {
+const slotOrDefault = (context, slotName, defaultValue) => {
+    const slot = context.event.request.intent.slots[slotName];
+    if (slot && slot.value) {
+        return slot.value;
+    }
+    return defaultValue;
+}
+
+const rollDice = (howMany, dieSize, modifier) => {
     let sum = 0;
     for (let i = 0; i < howMany; i++) {
         sum += Math.ceil(Math.random() * dieSize);
@@ -50,24 +29,35 @@ const rollDice = function (howMany, dieSize, modifier) {
 }
 
 var handlers = {
-    'LaunchRequest': function () {
+    'LaunchRequest': () => {
         this.emit('RollDiceIntent');
     },
-    'RollDiceIntent': function () {
-        var slots = this.event.request.intent.slots;
-        var total = rollDice(slots.HowMany || 1, slots.DieSize || 6, slots.Modifier || 0);
-        this.emit(':tell', this.t("ROLLED", total))
+    'RollDiceIntent': () => {
+        const howMany = parseInt(slotOrDefault(this, "HowMany", "1"));
+        const dieSize = parseInt(slotOrDefault(this, "DieSize", "6"));
+        const modifier = parseInt(slotOrDefault(this, "Modifier", "0"));
+        
+        const total = rollDice(howMany, dieSize, modifier);
+
+        let output = "";
+        if (modifier) {
+            const output = this.t("ROLLED_WITH_MODIFIER", howMany, dieSize, modifier, total);
+        } else {
+            const output = this.t("ROLLED", howMany, dieSize, total);
+        }
+
+        this.emit(':tellWithCard', output, this.t("DICE_CARD_TITLE"), output);
     },
 
-    'AMAZON.HelpIntent': function () {
+    'AMAZON.HelpIntent': () => {
         var speechOutput = this.t("HELP_MESSAGE");
         var reprompt = this.t("HELP_MESSAGE");
         this.emit(':ask', speechOutput, reprompt);
     },
-    'AMAZON.CancelIntent': function () {
+    'AMAZON.CancelIntent': () => {
         this.emit(':tell', this.t("STOP_MESSAGE"));
     },
-    'AMAZON.StopIntent': function () {
+    'AMAZON.StopIntent': () => {
         this.emit(':tell', this.t("STOP_MESSAGE"));
     }
 };
