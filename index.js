@@ -1,13 +1,13 @@
 'use strict';
 const Alexa = require('alexa-sdk');
 const _ = require('lodash');
-const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";  // TODO replace with your app ID (OPTIONAL).
+const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
 const resources = require('./resources.js');
 
 exports.handler = function(event, context, callback) {
     const alexa = Alexa.handler(event, context);
-    alexa.APP_ID = APP_ID;
+    alexa.appId = APP_ID;
     alexa.resources = resources;
     alexa.registerHandlers(handlers);
     alexa.execute();
