@@ -26,7 +26,7 @@ module.exports = {
             "ROLLED": "I rolled %s d %s for a total of %s",
             "ROLLED_WITH_MODIFIER": "I rolled %s d %s plus %s for a total of %s",
             "DICE_CARD_TITLE": "Rolled Dice",
-            "RACE_NOT_FOUND": "I couldn't find any %s names.",
+            "RACE_NOT_FOUND": "I couldn't find any %s names. ",
             "SUGGEST_NAME": "Here's a %s name. %s",
             "NAME_CARD_TITLE": "Generated Name",
             "SKILL_NAME" : "Table Genie",

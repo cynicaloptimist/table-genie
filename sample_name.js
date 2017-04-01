@@ -20,7 +20,7 @@ module.exports = {
       "slots": {
         "Race": {
           "name": "Race",
-          "value": "Dwarf"
+          "value": "Monkey"
         }
       },
       "name": "NameIntent"

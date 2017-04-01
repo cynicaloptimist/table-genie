@@ -55,11 +55,11 @@ const handlers = {
     'NameIntent': function () {
         const namesByRace = this.t("NAMES");
         let race = slotOrDefault(this, "Race", "?").toUpperCase();
-
+        let output = "";
         race = synonyms[race] || race;
 
         if (!namesByRace[race]) {
-            this.emit(this.t("RACE_NOT_FOUND"), race);
+            output += this.t("RACE_NOT_FOUND", race);
             race = "HUMAN";
         }
 
@@ -67,7 +67,7 @@ const handlers = {
         
         const name = names[0];
 
-        const output = this.t("SUGGEST_NAME", race, name);
+        output += this.t("SUGGEST_NAME", race, name);
         this.emit(':tellWithCard', output, this.t("NAME_CARD_TITLE"), output);
     },
 
