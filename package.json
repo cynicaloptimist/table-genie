@@ -1,5 +1,5 @@
 {
-  "name": "skill-rollme",
+  "name": "skill-table-genie",
   "version": "1.0.0",
   "description": "Generate random die rolls, names, et cetera.",
   "main": "index.js",
