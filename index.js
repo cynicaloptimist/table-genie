@@ -4,6 +4,7 @@ const _ = require('lodash');
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
 const resources = require('./resources.js');
+const synonyms = require('./synonyms.js');
 
 exports.handler = function(event, context, callback) {
     const alexa = Alexa.handler(event, context);
@@ -53,22 +54,20 @@ const handlers = {
 
     'NameIntent': function () {
         const namesByRace = this.t("NAMES");
-        //console.log(namesByRace);
-        const race = slotOrDefault(this, "Race", "human").toUpperCase();
-        //console.log(race);
+        let race = slotOrDefault(this, "Race", "?").toUpperCase();
 
-        let names = [""];
-        if (namesByRace[race]) {
-            names = _(namesByRace[race]).shuffle().value();
-        }
-        else {
-            names = _(namesByRace["HUMAN"]).shuffle().value();
-        }
-        //console.log(names);
+        race = synonyms[race] || race;
 
+        if (!namesByRace[race]) {
+            this.emit(this.t("RACE_NOT_FOUND"), race);
+            race = "HUMAN";
+        }
+
+        const names = _(namesByRace[race]).shuffle().value();
+        
         const name = names[0];
 
-        const output = this.t("SUGGEST_NAME", name);
+        const output = this.t("SUGGEST_NAME", race, name);
         this.emit(':tellWithCard', output, this.t("NAME_CARD_TITLE"), output);
     },
 

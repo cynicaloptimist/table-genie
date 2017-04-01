@@ -26,9 +26,10 @@ module.exports = {
             "ROLLED": "I rolled %s d %s for a total of %s",
             "ROLLED_WITH_MODIFIER": "I rolled %s d %s plus %s for a total of %s",
             "DICE_CARD_TITLE": "Rolled Dice",
-            "SUGGEST_NAME": "Here's a name. %s",
+            "RACE_NOT_FOUND": "I couldn't find any %s names.",
+            "SUGGEST_NAME": "Here's a %s name. %s",
             "NAME_CARD_TITLE": "Generated Name",
-            "SKILL_NAME" : "Dragon Table",
+            "SKILL_NAME" : "Table Genie",
             "HELP_MESSAGE" : "You can say roll me one d six plus one, or, you can say roll me an elf name, or roll me some loot. What would you like?",
             "HELP_REPROMPT" : "What would you like me to roll you?",
             "STOP_MESSAGE" : "Goodbye!"
