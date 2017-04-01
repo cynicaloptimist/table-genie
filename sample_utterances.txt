@@ -1,0 +1,10 @@
+RollDiceIntent {HowMany} d {DieSize} plus {Modifier}
+RollDiceIntent {HowMany} d {DieSize}
+RollDiceIntent roll {HowMany} d {DieSize}
+RollDiceIntent roll {HowMany} d {DieSize} plus {Modifier}
+RollDiceIntent a d {DieSize}
+RollDiceIntent a {DieSize} sided die
+RollDiceIntent roll a d {DieSize}
+RollDiceIntent roll a {DieSize} sided die
+NameIntent {Race} name
+NameIntent name for a {Race}

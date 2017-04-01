@@ -1,0 +1,39 @@
+{
+  "intents": [
+    {
+      "intent": "RollDiceIntent",
+      "slots": [
+        {
+          "name": "HowMany",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "DieSize",
+          "type": "AMAZON.NUMBER"
+        },
+        {
+          "name": "Modifier",
+          "type": "AMAZON.NUMBER"
+        }
+      ]
+    },
+     {
+      "intent": "NameIntent",
+      "slots": [
+        {
+          "name": "Race",
+          "type": "FantasyRace"
+        }
+      ]
+    },
+    {
+      "intent": "AMAZON.HelpIntent"
+    },
+    {
+      "intent": "AMAZON.StopIntent"
+    },
+    {
+      "intent": "AMAZON.CancelIntent"
+    }
+  ]
+}
