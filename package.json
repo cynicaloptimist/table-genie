@@ -4,7 +4,7 @@
   "description": "Generate random die rolls, names, et cetera.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "lambda-local -l index.js -e sample_dice.js"
   },
   "keywords": [
     "alexa",
@@ -14,6 +14,10 @@
   "author": "Evan Bailey",
   "license": "MIT",
   "dependencies": {
-    "alexa-sdk": "^1.0.7"
+    "alexa-sdk": "^1.0.7",
+    "lodash": "^4.17.4"
+  },
+  "devDependencies": {
+    "lambda-local": "^1.4.2"
   }
 }
