@@ -4,7 +4,6 @@ const _ = require('lodash');
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
 const resources = require('./resources.js');
-const synonyms = require('./synonyms.js');
 
 exports.handler = function(event, context, callback) {
     const alexa = Alexa.handler(event, context);
@@ -56,7 +55,6 @@ const handlers = {
         const namesByRace = this.t("NAMES");
         let race = slotOrDefault(this, "Race", "?").toUpperCase();
         let output = "";
-        race = synonyms[race] || race;
 
         if (!namesByRace[race]) {
             output += this.t("RACE_NOT_FOUND", race);
