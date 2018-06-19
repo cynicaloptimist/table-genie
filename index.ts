@@ -5,6 +5,7 @@ import * as _ from "lodash";
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
 import * as resources from "./resources";
+import { GetRandomEntryFromRedditTable } from "./reddit";
 
 export default {
     handler: function (event: Alexa.RequestBody<Alexa.Request>, context: Alexa.Context, callback: () => void) {
@@ -16,7 +17,7 @@ export default {
     }
 };
 
-const slotOrDefault = (context: any, slotName: string, defaultValue: string) => {
+const slotOrDefault = (context: any, slotName: string, defaultValue: string): string => {
     const slot = context.event.request.intent.slots[slotName];
     if (slot && slot.value && slot.value !== "?") {
         return slot.value;
@@ -70,6 +71,17 @@ const handlers: any = {
 
         output += this.t("SUGGEST_NAME", race, name);
         this.emit(':tellWithCard', output, this.t("NAME_CARD_TITLE"), output);
+    },
+
+    'SearchForTableIntent': function() {
+        const searchTerm = slotOrDefault(this, "SearchTerm", "");
+        if(!searchTerm.length) {
+            this.emit('RollDiceIntent');
+        }
+
+        const result = GetRandomEntryFromRedditTable(searchTerm);
+
+        this.emit(':tell', `I rolled on a table of random ${searchTerm} and got this: ${result}`)
     },
 
     'AMAZON.HelpIntent': function () {
