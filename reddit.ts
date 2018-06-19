@@ -1,5 +1,6 @@
 import * as _ from "lodash";
 import axios from "axios";
+import * as cheerio from "cheerio";
 
 const subredditUrl = "http://www.reddit.com/r/BehindTheTables.json?limit=10";
 
@@ -24,7 +25,18 @@ export async function GetRandomEntryFromRedditTable(searchTerm: string) {
     }
     const searchRegex = new RegExp(searchTerm);
     const postsWithSearchTerm = posts.filter(p => searchRegex.test(p));
-    return postsWithSearchTerm;
+    const firstPost = postsWithSearchTerm[0];
+    if(firstPost === undefined) {
+        return "";
+    }
+    const $ = cheerio.load(_.unescape(firstPost));
+    const entries = $("li");
+    const randomIndex = _.random(entries.length);
+    const randomEntry = entries[randomIndex].children[0].data;
+    if(randomEntry === undefined) {
+        return "";
+    }
+    return randomEntry;
 }
 
-GetRandomEntryFromRedditTable("spotty").then(c => console.log(c));
+GetRandomEntryFromRedditTable("Scotch").then(c => console.log(c));
