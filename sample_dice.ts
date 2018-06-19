@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   "session": {
     "new": false,
     "sessionId": "amzn1.echo-api.session.[unique-value-here]",
@@ -18,12 +18,20 @@ module.exports = {
     "requestId": "amzn1.echo-api.request.[unique-value-here]",
     "intent": {
       "slots": {
-        "Race": {
-          "name": "Race",
-          "value": "Monkey"
+        "HowMany": {
+          "name": "HowMany",
+          "value": "1"
+        },
+        "DieSize": {
+          "name": "DieSize",
+          "value": "6"
+        },
+        "Modifier": {
+          "name": "Modifier",
+          "value": "2"
         }
       },
-      "name": "NameIntent"
+      "name": "RollDiceIntent"
     }
   },
   "context": {
