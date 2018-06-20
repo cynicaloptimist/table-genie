@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   "session": {
     "new": false,
     "sessionId": "amzn1.echo-api.session.[unique-value-here]",
