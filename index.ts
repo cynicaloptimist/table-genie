@@ -7,15 +7,13 @@ const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 import * as resources from "./resources";
 import { GetRandomEntryFromRedditTable } from "./reddit";
 
-export default {
-    handler: function (event: Alexa.RequestBody<Alexa.Request>, context: Alexa.Context, callback: () => void) {
-        const alexa = Alexa.handler(event, context);
-        alexa.appId = APP_ID;
-        alexa.resources = resources;
-        alexa.registerHandlers(handlers);
-        alexa.execute();
-    }
-};
+exports.handler = function (event: Alexa.RequestBody<Alexa.Request>, context: Alexa.Context, callback: () => void) {
+    const alexa = Alexa.handler(event, context);
+    alexa.appId = APP_ID;
+    alexa.resources = resources;
+    alexa.registerHandlers(handlers);
+    alexa.execute();
+}
 
 const slotOrDefault = (context: any, slotName: string, defaultValue: string): string => {
     const slot = context.event.request.intent.slots[slotName];
