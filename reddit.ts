@@ -29,6 +29,17 @@ function getFirstPostWithRollableEntries(posts: RedditPost []): RedditPost {
     return posts[0];
 }
 
+function getRandomEntryFromHtml(postHtml: string): string {
+    const $ = cheerio.load(postHtml);
+    const entries = $("li");
+    const randomIndex = _.random(entries.length);
+    const randomEntry = entries[randomIndex].children[0].data;
+    if(randomEntry === undefined) {
+        return "";
+    }
+    return randomEntry;
+}
+
 export async function GetRandomEntryFromRedditTable(searchTerm: string) {
     const posts = await getPosts(searchTerm);
     if(posts === undefined) {
@@ -40,14 +51,7 @@ export async function GetRandomEntryFromRedditTable(searchTerm: string) {
     }
     console.log("Post title: " + firstPost.title);
     console.log("Post url: " + firstPost.url);
-    const $ = cheerio.load(_.unescape(firstPost.selftext_html));
-    const entries = $("li");
-    const randomIndex = _.random(entries.length);
-    const randomEntry = entries[randomIndex].children[0].data;
-    if(randomEntry === undefined) {
-        return "";
-    }
-    return randomEntry;
+    return getRandomEntryFromHtml(_.unescape(firstPost.selftext_html));
 }
 
 const searchArgument = process.argv[2];
