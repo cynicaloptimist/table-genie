@@ -2,27 +2,27 @@ import * as _ from "lodash";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables/search.json?q=${searchTerm}&restrict_sr=on&&sort=relevance&t=all&limit=${limit}`;
-
-async function getPosts(searchTerm: string): Promise<any [] | undefined> {
-    try {
-        const subredditUrl = getSubredditUrl(searchTerm, 1);
-        const response = await axios.get(subredditUrl);
-        const selfPostHtmlContents: string [] = response.data.data
-            .children
-            .filter((c: any) => c.kind == "t3" && c.data && c.data.selftext_html)
-            .map((c: any) => c.data);
-        return selfPostHtmlContents;
-    } catch (error) {
-        console.error(error);
-    }
-}
-
 interface RedditPost {
     title: string;
     url: string;
     selftext?: string;
     selftext_html?: string;
+}
+
+const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables/search.json?q=${searchTerm}&restrict_sr=on&&sort=relevance&t=all&limit=${limit}`;
+
+async function getPosts(searchTerm: string): Promise<RedditPost [] | undefined> {
+    try {
+        const subredditUrl = getSubredditUrl(searchTerm, 1);
+        const response = await axios.get(subredditUrl);
+        const posts: RedditPost [] = response.data.data
+            .children
+            .filter((c: any) => c.kind == "t3" && c.data && c.data.selftext_html)
+            .map((c: any) => c.data);
+        return posts;
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 function getFirstPostWithRollableEntries(posts: RedditPost []): RedditPost {
