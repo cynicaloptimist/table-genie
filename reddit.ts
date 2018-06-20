@@ -40,4 +40,7 @@ export async function GetRandomEntryFromRedditTable(searchTerm: string) {
     return randomEntry;
 }
 
-GetRandomEntryFromRedditTable("Scotch").then(c => console.log(c));
+const searchArgument = process.argv[2];
+if(searchArgument !== undefined){
+    GetRandomEntryFromRedditTable(searchArgument).then(c => console.log(c));
+}
