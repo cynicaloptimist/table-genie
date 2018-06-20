@@ -32,12 +32,11 @@ function getFirstPostWithRollableEntries(posts: RedditPost []): RedditPost {
 function getRandomEntryFromHtml(postHtml: string): string {
     const $ = cheerio.load(postHtml);
     const entries = $("li, td:nth-child(2)");
-    const randomIndex = _.random(entries.length);
-    const randomEntry = entries[randomIndex].children[0].data;
+    const randomEntry = _.sample(entries);
     if(randomEntry === undefined) {
         return "";
     }
-    return randomEntry;
+    return $(randomEntry).text();
 }
 
 export async function GetRandomEntryFromRedditTable(searchTerm: string) {
