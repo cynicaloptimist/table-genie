@@ -24,9 +24,7 @@ export async function GetRandomEntryFromRedditTable(searchTerm: string) {
     if(posts === undefined) {
         return "";
     }
-    const searchRegex = new RegExp(searchTerm);
-    const postsWithSearchTerm = posts.filter(p => searchRegex.test(p));
-    const firstPost = postsWithSearchTerm[0];
+    const firstPost = posts[0];
     if(firstPost === undefined) {
         return "";
     }
