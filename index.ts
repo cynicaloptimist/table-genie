@@ -4,7 +4,7 @@ import * as _ from "lodash";
 
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
-import * as resources from "./resources";
+const resources = require("./resources");
 import { GetRandomEntryFromRedditTable } from "./reddit";
 
 exports.handler = function (event: Alexa.RequestBody<Alexa.Request>, context: Alexa.Context, callback: () => void) {
