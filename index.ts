@@ -73,15 +73,17 @@ const handlers: any = {
         this.emit(':tellWithCard', output, this.t("NAME_CARD_TITLE"), output);
     },
 
-    'SearchForTableIntent': function() {
+    'SearchForTableIntent': function () {
         const searchTerm = slotOrDefault(this, "SearchTerm", "");
-        if(!searchTerm.length) {
+        if (!searchTerm.length) {
             this.emit('RollDiceIntent');
         }
 
-        const result = GetRandomEntryFromRedditTable(searchTerm);
+        GetRandomEntryFromRedditTable(searchTerm)
+            .then(result => {
+                this.emit(':tell', `I rolled on a table of random ${searchTerm} and got this: ${result}`)
+            });
 
-        this.emit(':tell', `I rolled on a table of random ${searchTerm} and got this: ${result}`)
     },
 
     'AMAZON.HelpIntent': function () {
