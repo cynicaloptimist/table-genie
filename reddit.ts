@@ -18,15 +18,28 @@ async function getPosts(searchTerm: string): Promise<any [] | undefined> {
     }
 }
 
+interface RedditPost {
+    title: string;
+    url: string;
+    selftext?: string;
+    selftext_html?: string;
+}
+
+function getFirstPostWithRollableEntries(posts: RedditPost []): RedditPost {
+    return posts[0];
+}
+
 export async function GetRandomEntryFromRedditTable(searchTerm: string) {
     const posts = await getPosts(searchTerm);
     if(posts === undefined) {
         return "";
     }
-    const firstPost = posts[0];
+    const firstPost = getFirstPostWithRollableEntries(posts);
     if(firstPost === undefined) {
         return "";
     }
+    console.log("Post title: " + firstPost.title);
+    console.log("Post url: " + firstPost.url);
     const $ = cheerio.load(_.unescape(firstPost.selftext_html));
     const entries = $("li");
     const randomIndex = _.random(entries.length);
