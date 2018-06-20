@@ -31,7 +31,7 @@ function getFirstPostWithRollableEntries(posts: RedditPost []): RedditPost {
 
 function getRandomEntryFromHtml(postHtml: string): string {
     const $ = cheerio.load(postHtml);
-    const entries = $("li");
+    const entries = $("li, td:nth-child(2)");
     const randomIndex = _.random(entries.length);
     const randomEntry = entries[randomIndex].children[0].data;
     if(randomEntry === undefined) {
