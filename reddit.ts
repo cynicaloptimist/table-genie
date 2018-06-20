@@ -2,10 +2,11 @@ import * as _ from "lodash";
 import axios from "axios";
 import * as cheerio from "cheerio";
 
-const subredditUrl = "http://www.reddit.com/r/BehindTheTables.json?limit=10";
+const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables/search.json?q=${searchTerm}&restrict_sr=on&&sort=relevance&t=all&limit=${limit}`;
 
-async function getSelfPostHtmlContents(): Promise<string [] | undefined> {
+async function getSelfPostHtmlContents(searchTerm: string): Promise<string [] | undefined> {
     try {
+        const subredditUrl = getSubredditUrl(searchTerm, 1);
         const response = await axios.get(subredditUrl);
         const selfPostHtmlContents: string [] = response.data.data
             .children
@@ -19,7 +20,7 @@ async function getSelfPostHtmlContents(): Promise<string [] | undefined> {
 }
 
 export async function GetRandomEntryFromRedditTable(searchTerm: string) {
-    const posts = await getSelfPostHtmlContents();
+    const posts = await getSelfPostHtmlContents(searchTerm);
     if(posts === undefined) {
         return "";
     }
