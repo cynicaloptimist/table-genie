@@ -83,7 +83,7 @@ const handlers: any = {
                     return;
                 }
 
-                const allRolls = result.rolls.map(r => `${r.rollPrompt}: ${r.rollResult}`).join("; ");
+                const allRolls = result.rollResults.map(r => `${r.rollPrompt}: ${r.rollResult}`).join("; ");
                 this.emit(':tell', this.t("ROLLED_ON_TABLE", result.postTitle, allRolls));
             });
 

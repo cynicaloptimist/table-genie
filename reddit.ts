@@ -10,12 +10,14 @@ interface RedditPost {
 }
 
 interface RollResult {
-    postTitle: string;
-    postUrl: string;
-    rolls: {
         rollPrompt: string;
         rollResult: string;
-    } []
+}
+
+interface TableResult {
+    postTitle: string;
+    postUrl: string;
+    rollResults: RollResult []
 }
 
 const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables/search.json?q=${searchTerm}&restrict_sr=on&&sort=relevance&t=all&limit=${limit}`;
@@ -56,7 +58,7 @@ function getRandomEntryFromHtml(postHtml: string): string {
     return $(randomEntry).text();
 }
 
-export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<RollResult | undefined> {
+export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<TableResult | undefined> {
     const posts = await getPosts(searchTerm, 10);
     if(posts === undefined) {
         throw "Couldn't get posts.";
