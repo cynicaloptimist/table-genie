@@ -8,9 +8,9 @@
     "url": "https://github.com/cynicaloptimist/table-genie.git"
   },
   "scripts": {
-    "test": "lambda-local -l index.js -e sample_dice.js",
-    "test:name": "lambda-local -l index.js -e sample_name.js",
-    "test:trinket": "lambda-local -l index.js -e sample_trinket.js"
+    "test": "lambda-local -l ./dist/index.js -e sample_dice.js",
+    "test:name": "lambda-local -l ./dist/index.js -e sample_name.js",
+    "test:trinket": "lambda-local -l ./dist/index.js -e sample_trinket.js"
   },
   "keywords": [
     "alexa",
