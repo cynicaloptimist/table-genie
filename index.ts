@@ -79,7 +79,7 @@ const handlers: any = {
 
         GetRandomEntryFromRedditTable(searchTerm)
             .then(result => {
-                this.emit(':tell', `I rolled on a table of random ${searchTerm}s and got this: ${result}`)
+                this.emit(':tell', this.t("ROLLED_ON_TABLE", searchTerm, result));
             });
 
     },
