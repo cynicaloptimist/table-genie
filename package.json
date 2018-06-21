@@ -10,7 +10,8 @@
   "scripts": {
     "test": "lambda-local -l ./dist/index.js -e sample_dice.js",
     "test:name": "lambda-local -l ./dist/index.js -e sample_name.js",
-    "test:trinket": "lambda-local -l ./dist/index.js -e sample_trinket.js"
+    "test:trinket": "lambda-local -l ./dist/index.js -e sample_trinket.js",
+    "build": "tsc && copy-node-modules ./ ./dist/ && rm -r ./dist/node_modules/aws-sdk"
   },
   "keywords": [
     "alexa",
@@ -30,6 +31,7 @@
     "@types/cheerio": "^0.22.7",
     "@types/jest": "^23.1.1",
     "@types/lodash": "^4.14.110",
+    "copy-node-modules": "^1.0.6",
     "jest": "^23.1.0",
     "lambda-local": "^1.4.2",
     "ts-jest": "^22.4.6",
