@@ -79,7 +79,12 @@ const handlers: any = {
 
         GetRandomEntryFromRedditTable(searchTerm)
             .then(result => {
-                this.emit(':tell', this.t("ROLLED_ON_TABLE", searchTerm, result));
+                if(result === undefined) {
+                    return;
+                }
+
+                const allRolls = result.rolls.map(r => `${r.rollPrompt}: ${r.rollResult}`).join("; ");
+                this.emit(':tell', this.t("ROLLED_ON_TABLE", result.postTitle, allRolls));
             });
 
     },

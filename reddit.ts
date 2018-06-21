@@ -9,6 +9,15 @@ interface RedditPost {
     selftext_html?: string;
 }
 
+interface RollResult {
+    postTitle: string;
+    postUrl: string;
+    rolls: {
+        rollPrompt: string;
+        rollResult: string;
+    } []
+}
+
 const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables/search.json?q=${searchTerm}&restrict_sr=on&&sort=relevance&t=all&limit=${limit}`;
 
 function getPostsFromResponse(response: any): RedditPost[] {
@@ -47,18 +56,28 @@ function getRandomEntryFromHtml(postHtml: string): string {
     return $(randomEntry).text();
 }
 
-export async function GetRandomEntryFromRedditTable(searchTerm: string) {
+export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<RollResult | undefined> {
     const posts = await getPosts(searchTerm, 10);
     if(posts === undefined) {
-        return "";
+        throw "Couldn't get posts.";
     }
     const firstPost = getFirstPostWithRollableEntries(posts);
     if(firstPost === undefined) {
-        return "";
+        throw "Couldn't find any rollable tables.";
     }
     console.log("Post title: " + firstPost.title);
     console.log("Post url: " + firstPost.url);
-    return getRandomEntryFromHtml(_.unescape(firstPost.selftext_html));
+    const rollResult = getRandomEntryFromHtml(_.unescape(firstPost.selftext_html));
+    return {
+        postTitle: firstPost.title,
+        postUrl: firstPost.url,
+        rolls: [
+            {
+                rollPrompt: "",
+                rollResult: rollResult
+            }
+        ]
+    }
 }
 
 const searchArgument = process.argv[2];
