@@ -10,8 +10,8 @@ interface RedditPost {
 }
 
 interface RollResult {
-        rollPrompt: string;
-        rollResult: string;
+    rollPrompt: string;
+    rollResult: string;
 }
 
 interface TableResult {
@@ -48,14 +48,21 @@ function getFirstPostWithRollableEntries(posts: RedditPost[]): RedditPost {
     return firstPost;
 }
 
-function getRandomEntryFromHtml(postHtml: string): string {
+function generateRollResultsFromPost(postHtml: string): RollResult [] {
     const $ = load(postHtml);
     const entries = $("li, td:nth-child(2)");
     const randomEntry = _.sample(entries);
+
     if(randomEntry === undefined) {
-        return "";
+        throw "Couldn't get a random entry.";
     }
-    return $(randomEntry).text();
+
+    return [
+        {
+            rollPrompt: "",
+            rollResult: $(randomEntry).text();
+        }
+    ];    
 }
 
 export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<TableResult | undefined> {
@@ -69,16 +76,11 @@ export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise
     }
     console.log("Post title: " + firstPost.title);
     console.log("Post url: " + firstPost.url);
-    const rollResult = getRandomEntryFromHtml(_.unescape(firstPost.selftext_html));
+    const rollResults = generateRollResultsFromPost(_.unescape(firstPost.selftext_html));
     return {
         postTitle: firstPost.title,
         postUrl: firstPost.url,
-        rolls: [
-            {
-                rollPrompt: "",
-                rollResult: rollResult
-            }
-        ]
+        rollResults: rollResults
     }
 }
 
