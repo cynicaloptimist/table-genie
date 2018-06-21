@@ -11,9 +11,9 @@ interface RedditPost {
 
 const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables/search.json?q=${searchTerm}&restrict_sr=on&&sort=relevance&t=all&limit=${limit}`;
 
-async function getPosts(searchTerm: string): Promise<RedditPost [] | undefined> {
+async function getPosts(searchTerm: string, limit: number): Promise<RedditPost [] | undefined> {
     try {
-        const subredditUrl = getSubredditUrl(searchTerm, 1);
+        const subredditUrl = getSubredditUrl(searchTerm, limit);
         const response = await axios.get(subredditUrl);
         const posts: RedditPost [] = response.data.data
             .children
@@ -40,7 +40,7 @@ function getRandomEntryFromHtml(postHtml: string): string {
 }
 
 export async function GetRandomEntryFromRedditTable(searchTerm: string) {
-    const posts = await getPosts(searchTerm);
+    const posts = await getPosts(searchTerm, 10);
     if(posts === undefined) {
         return "";
     }
