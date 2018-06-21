@@ -1,11 +1,12 @@
 {
   "name": "skill-table-genie",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generate random die rolls, names, et cetera.",
   "main": "index.js",
   "scripts": {
     "test": "lambda-local -l index.js -e sample_dice.js",
-    "test:name": "lambda-local -l index.js -e sample_name.js"
+    "test:name": "lambda-local -l index.js -e sample_name.js",
+    "test:trinket": "lambda-local -l index.js -e sample_trinket.js"
   },
   "keywords": [
     "alexa",
@@ -15,20 +16,20 @@
   "author": "Evan Bailey",
   "license": "MIT",
   "dependencies": {
-    "@types/alexa-sdk": "^1.1.1",
-    "@types/cheerio": "^0.22.7",
-    "@types/jest": "^23.1.1",
-    "@types/lodash": "^4.14.109",
     "alexa-sdk": "^1.0.25",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
-    "jest": "^23.1.0",
-    "lodash": "^4.17.10",
-    "ts-jest": "^22.4.6",
-    "typescript": "^2.9.2"
+    "lodash": "^4.17.10"
   },
   "devDependencies": {
-    "lambda-local": "^1.4.2"
+    "@types/alexa-sdk": "^1.1.1",
+    "@types/cheerio": "^0.22.7",
+    "@types/jest": "^23.1.1",
+    "@types/lodash": "^4.14.110",
+    "jest": "^23.1.0",
+    "lambda-local": "^1.4.2",
+    "ts-jest": "^22.4.6",
+    "typescript": "^2.9.2"
   },
   "jest": {
     "transform": {

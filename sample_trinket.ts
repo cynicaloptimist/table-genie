@@ -18,20 +18,12 @@ module.exports = {
     "requestId": "amzn1.echo-api.request.[unique-value-here]",
     "intent": {
       "slots": {
-        "HowMany": {
-          "name": "HowMany",
-          "value": "1"
-        },
-        "DieSize": {
-          "name": "DieSize",
-          "value": "6"
-        },
-        "Modifier": {
-          "name": "Modifier",
-          "value": "2"
+        "SearchTerm": {
+          "name": "SearchTerm",
+          "value": "trinket"
         }
       },
-      "name": "RollDiceIntent"
+      "name": "SearchForTableIntent"
     }
   },
   "context": {

@@ -4,18 +4,16 @@ import { shuffle, random } from "lodash";
 
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
-import * as resources from "./resources";
+const resources = require("./resources");
 import { GetRandomEntryFromRedditTable } from "./reddit";
 
-export default {
-    handler: function (event: Alexa.RequestBody<Alexa.Request>, context: Alexa.Context, callback: () => void) {
-        const alexa = Alexa.handler(event, context);
-        alexa.appId = APP_ID;
-        alexa.resources = resources;
-        alexa.registerHandlers(handlers);
-        alexa.execute();
-    }
-};
+exports.handler = function (event: Alexa.RequestBody<Alexa.Request>, context: Alexa.Context, callback: () => void) {
+    const alexa = Alexa.handler(event, context);
+    alexa.appId = APP_ID;
+    alexa.resources = resources;
+    alexa.registerHandlers(handlers);
+    alexa.execute();
+}
 
 const slotOrDefault = (context: any, slotName: string, defaultValue: string): string => {
     const slot = context.event.request.intent.slots[slotName];
@@ -73,15 +71,17 @@ const handlers: any = {
         this.emit(':tellWithCard', output, this.t("NAME_CARD_TITLE"), output);
     },
 
-    'SearchForTableIntent': function() {
+    'SearchForTableIntent': function () {
         const searchTerm = slotOrDefault(this, "SearchTerm", "");
-        if(!searchTerm.length) {
+        if (!searchTerm.length) {
             this.emit('RollDiceIntent');
         }
 
-        const result = GetRandomEntryFromRedditTable(searchTerm);
+        GetRandomEntryFromRedditTable(searchTerm)
+            .then(result => {
+                this.emit(':tell', `I rolled on a table of random ${searchTerm}s and got this: ${result}`)
+            });
 
-        this.emit(':tell', `I rolled on a table of random ${searchTerm} and got this: ${result}`)
     },
 
     'AMAZON.HelpIntent': function () {
