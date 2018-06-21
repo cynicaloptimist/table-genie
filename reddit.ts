@@ -1,4 +1,4 @@
-import { sample, unescape } from "lodash";
+import * as _ from "lodash";
 import axios from "axios";
 import { load } from "cheerio";
 
@@ -28,14 +28,19 @@ async function getPosts(searchTerm: string, limit: number): Promise<RedditPost [
     }
 }
 
-function getFirstPostWithRollableEntries(posts: RedditPost []): RedditPost {
-    return posts[0];
+function getFirstPostWithRollableEntries(posts: RedditPost[]): RedditPost {
+    const rollableEntryClue = new RegExp(/(table|ol)/i);
+    const firstPost = _.find(posts, (post) => rollableEntryClue.test(post.selftext_html || ""));
+    if (firstPost == undefined) {
+        throw "Couldn't find any rollable entries.";
+    }
+    return firstPost;
 }
 
 function getRandomEntryFromHtml(postHtml: string): string {
     const $ = load(postHtml);
     const entries = $("li, td:nth-child(2)");
-    const randomEntry = sample(entries);
+    const randomEntry = _.sample(entries);
     if(randomEntry === undefined) {
         return "";
     }
@@ -53,7 +58,7 @@ export async function GetRandomEntryFromRedditTable(searchTerm: string) {
     }
     console.log("Post title: " + firstPost.title);
     console.log("Post url: " + firstPost.url);
-    return getRandomEntryFromHtml(unescape(firstPost.selftext_html));
+    return getRandomEntryFromHtml(_.unescape(firstPost.selftext_html));
 }
 
 const searchArgument = process.argv[2];
