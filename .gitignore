@@ -1,5 +1,3 @@
 node_modules/
 dist/
 *.zip
-*.js
-*.js.map
