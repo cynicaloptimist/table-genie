@@ -3,6 +3,10 @@
   "version": "1.1.0",
   "description": "Generate random die rolls, names, et cetera.",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cynicaloptimist/table-genie.git"
+  },
   "scripts": {
     "test": "lambda-local -l index.js -e sample_dice.js",
     "test:name": "lambda-local -l index.js -e sample_name.js",
