@@ -60,7 +60,7 @@ function generateRollResultsFromPost(postHtml: string): RollResult [] {
     return [
         {
             rollPrompt: "",
-            rollResult: $(randomEntry).text();
+            rollResult: $(randomEntry).text()
         }
     ];    
 }
