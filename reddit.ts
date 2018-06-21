@@ -1,6 +1,6 @@
-import * as _ from "lodash";
+import { sample, unescape } from "lodash";
 import axios from "axios";
-import * as cheerio from "cheerio";
+import { load } from "cheerio";
 
 interface RedditPost {
     title: string;
@@ -30,9 +30,9 @@ function getFirstPostWithRollableEntries(posts: RedditPost []): RedditPost {
 }
 
 function getRandomEntryFromHtml(postHtml: string): string {
-    const $ = cheerio.load(postHtml);
+    const $ = load(postHtml);
     const entries = $("li, td:nth-child(2)");
-    const randomEntry = _.sample(entries);
+    const randomEntry = sample(entries);
     if(randomEntry === undefined) {
         return "";
     }
@@ -50,7 +50,7 @@ export async function GetRandomEntryFromRedditTable(searchTerm: string) {
     }
     console.log("Post title: " + firstPost.title);
     console.log("Post url: " + firstPost.url);
-    return getRandomEntryFromHtml(_.unescape(firstPost.selftext_html));
+    return getRandomEntryFromHtml(unescape(firstPost.selftext_html));
 }
 
 const searchArgument = process.argv[2];

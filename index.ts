@@ -1,6 +1,6 @@
 'use strict';
 import * as Alexa from "alexa-sdk";
-import * as _ from "lodash";
+import { shuffle, random } from "lodash";
 
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
@@ -28,7 +28,7 @@ const slotOrDefault = (context: any, slotName: string, defaultValue: string): st
 const rollDice = (howMany: number, dieSize: number, modifier: number) => {
     let sum = 0;
     for (let i = 0; i < howMany; i++) {
-        sum += _.random(1, dieSize);
+        sum += random(1, dieSize);
     }
     return sum + modifier;
 }
@@ -65,7 +65,7 @@ const handlers: any = {
             race = "HUMAN";
         }
 
-        const names = _(namesByRace[race]).shuffle().value();
+        const names = shuffle(namesByRace[race]);
 
         const name = names[0];
 
