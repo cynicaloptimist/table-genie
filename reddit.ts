@@ -72,7 +72,7 @@ function generateRollResultsFromPost(postHtml: string): RollResult[] {
     const tableResults: RollResult[] = tables.toArray().map(
         table => {
             const tableHeader = $(table).find("th:nth-child(2)").text();
-            const tableItems = $(table).find("td:nth-child(2)").text();
+            const tableItems = $(table).find("td:nth-child(2)").toArray().map(td => $(td).text());
             const randomEntry = _.sample(tableItems);
 
             if (randomEntry == undefined) {
