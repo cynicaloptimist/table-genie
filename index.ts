@@ -93,6 +93,10 @@ const handlers: any = {
 
     },
 
+    'WishIntent': function () {
+        return this.emit(this.t("WISH_JOKE"));
+    },
+
     'AMAZON.HelpIntent': function () {
         const speechOutput = this.t("HELP_MESSAGE");
         const reprompt = this.t("HELP_MESSAGE");

@@ -31,6 +31,7 @@ module.exports = {
             "RACE_NOT_FOUND": "I couldn't find any %s names. ",
             "SUGGEST_NAME": "Here's a %s name. %s",
             "NAME_CARD_TITLE": "Generated Name",
+            "WISH_JOKE": `I'm not <emphasis level="strong">that</emphasis> kind of genie!`,
             "SKILL_NAME": "Table Genie",
             "HELP_MESSAGE": "You can say roll me one d six plus one, or, you can ask for something random, like a random quest or a random potion. What would you like?",
             "HELP_REPROMPT": "What would you like me to roll you?",
