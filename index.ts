@@ -94,7 +94,7 @@ const handlers: any = {
     },
 
     'WishIntent': function () {
-        return this.emit(this.t("WISH_JOKE"));
+        this.emit(":tell", this.t("WISH_JOKE"));
     },
 
     'AMAZON.HelpIntent': function () {
