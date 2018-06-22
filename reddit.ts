@@ -53,7 +53,7 @@ function generateRollResultsFromPost(postHtml: string): RollResult[] {
     const orderedLists = $("ol");
     const listResults = orderedLists.toArray().map(
         header => {
-            const listHeaderText = $(header).prev("p").children("strong").text();
+            const listHeader = $(header).prev("p").children("strong").text();
             const listItems = $(header).children("li").toArray().map(c => $(c).text());;
             const randomEntry = _.sample(listItems);
 
@@ -62,7 +62,7 @@ function generateRollResultsFromPost(postHtml: string): RollResult[] {
             }
 
             return {
-                rollPrompt: listHeaderText,
+                rollPrompt: listHeader,
                 rollResult: randomEntry
             }
         }
