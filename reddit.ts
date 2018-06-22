@@ -20,7 +20,7 @@ interface TableResult {
     rollResults: RollResult[]
 }
 
-const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables+d100/search.json?q=${searchTerm}&restrict_sr=on&sort=relevance&t=all&limit=${limit}`;
+const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables/search.json?q=${searchTerm}&restrict_sr=on&sort=relevance&t=all&limit=${limit}`;
 
 function getPostsFromResponse(response: any): RedditPost[] {
     return response.data.data
