@@ -79,12 +79,16 @@ const handlers: any = {
 
         GetRandomEntryFromRedditTable(searchTerm)
             .then(result => {
-                if(result === undefined) {
+                if (result === undefined) {
                     return;
                 }
 
                 const allRolls = result.rollResults.map(r => `${r.rollPrompt}: ${r.rollResult}`).join("; ");
-                this.emit(':tell', this.t("ROLLED_ON_TABLE", result.postTitle, allRolls));
+                this.emit(':tellWithCard',
+                    this.t("ROLLED_ON_TABLE_SPEECH", result.postTitle, allRolls),
+                    result.postTitle,
+                    allRolls
+                );
             });
 
     },
