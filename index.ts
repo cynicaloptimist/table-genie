@@ -83,7 +83,7 @@ const handlers: any = {
                     return;
                 }
 
-                const allRolls = result.rollResults.map(r => `${r.rollPrompt}: ${r.rollResult}`).join("; ");
+                const allRolls = result.rollResults.map(r => `${r.rollPrompt}: ${r.rollResult}`).join(`<break strength="strong" />`);
                 this.emit(':tellWithCard',
                     this.t("ROLLED_ON_TABLE_SPEECH", result.postTitle, allRolls),
                     result.postTitle,
