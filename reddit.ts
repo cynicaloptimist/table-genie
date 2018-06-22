@@ -51,14 +51,14 @@ function getFirstPostWithRollableEntries(posts: RedditPost[]): RedditPost {
 function generateRollResultsFromPost(postHtml: string): RollResult[] {
     const $ = load(postHtml);
     const orderedLists = $("ol");
-    const listResults = orderedLists.toArray().map(
-        header => {
-            const listHeader = $(header).prev("p").children("strong").text();
-            const listItems = $(header).children("li").toArray().map(c => $(c).text());;
+    const listResults: RollResult[] = orderedLists.toArray().map(
+        list => {
+            const listHeader = $(list).prev("p").children("strong").text();
+            const listItems = $(list).children("li").toArray().map(c => $(c).text());;
             const randomEntry = _.sample(listItems);
 
             if (randomEntry == undefined) {
-                throw "Could not sample table.";
+                throw "Could not sample list: " + listHeader;
             }
 
             return {
@@ -68,14 +68,25 @@ function generateRollResultsFromPost(postHtml: string): RollResult[] {
         }
     );
 
-    const entries = $("li, td:nth-child(2)");
-    const randomEntry = _.sample(entries);
+    const tables = $("table");
+    const tableResults: RollResult[] = tables.toArray().map(
+        table => {
+            const tableHeader = $(table).find("th:nth-child(2)").text();
+            const tableItems = $(table).find("td:nth-child(2)").text();
+            const randomEntry = _.sample(tableItems);
 
-    if (randomEntry === undefined) {
-        throw "Couldn't get a random entry.";
-    }
+            if (randomEntry == undefined) {
+                throw "Could not sample table: " + tableHeader;
+            }
 
-    return listResults;
+            return {
+                rollPrompt: tableHeader,
+                rollResult: randomEntry
+            }
+        }
+    );
+
+    return [...listResults, ...tableResults];
 }
 
 export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<TableResult | undefined> {
