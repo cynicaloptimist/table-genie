@@ -17,19 +17,19 @@ interface RollResult {
 interface TableResult {
     postTitle: string;
     postUrl: string;
-    rollResults: RollResult []
+    rollResults: RollResult[]
 }
 
-const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables/search.json?q=${searchTerm}&restrict_sr=on&&sort=relevance&t=all&limit=${limit}`;
+const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables/search.json?q=${searchTerm}&restrict_sr=on&sort=relevance&t=all&limit=${limit}`;
 
 function getPostsFromResponse(response: any): RedditPost[] {
     return response.data.data
-    .children
-    .filter((c: any) => c.kind == "t3" && c.data && c.data.selftext_html)
-    .map((c: any) => c.data);
+        .children
+        .filter((c: any) => c.kind == "t3" && c.data && c.data.selftext_html)
+        .map((c: any) => c.data);
 }
 
-async function getPosts(searchTerm: string, limit: number): Promise<RedditPost [] | undefined> {
+async function getPosts(searchTerm: string, limit: number): Promise<RedditPost[] | undefined> {
     try {
         const subredditUrl = getSubredditUrl(searchTerm, limit);
         const response = await axios.get(subredditUrl);
@@ -48,30 +48,43 @@ function getFirstPostWithRollableEntries(posts: RedditPost[]): RedditPost {
     return firstPost;
 }
 
-function generateRollResultsFromPost(postHtml: string): RollResult [] {
+function generateRollResultsFromPost(postHtml: string): RollResult[] {
     const $ = load(postHtml);
+    const orderedLists = $("ol");
+    const listResults = orderedLists.toArray().map(
+        header => {
+            const listHeaderText = $(header).prev("p").children("strong").text();
+            const listItems = $(header).children("li").toArray().map(c => $(c).text());;
+            const randomEntry = _.sample(listItems);
+
+            if (randomEntry == undefined) {
+                throw "Could not sample table.";
+            }
+
+            return {
+                rollPrompt: listHeaderText,
+                rollResult: randomEntry
+            }
+        }
+    );
+
     const entries = $("li, td:nth-child(2)");
     const randomEntry = _.sample(entries);
 
-    if(randomEntry === undefined) {
+    if (randomEntry === undefined) {
         throw "Couldn't get a random entry.";
     }
 
-    return [
-        {
-            rollPrompt: "",
-            rollResult: $(randomEntry).text()
-        }
-    ];    
+    return listResults;
 }
 
 export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<TableResult | undefined> {
     const posts = await getPosts(searchTerm, 10);
-    if(posts === undefined) {
+    if (posts === undefined) {
         throw "Couldn't get posts.";
     }
     const firstPost = getFirstPostWithRollableEntries(posts);
-    if(firstPost === undefined) {
+    if (firstPost === undefined) {
         throw "Couldn't find any rollable tables.";
     }
     console.log("Post title: " + firstPost.title);
@@ -82,9 +95,4 @@ export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise
         postUrl: firstPost.url,
         rollResults: rollResults
     }
-}
-
-const searchArgument = process.argv[2];
-if(searchArgument !== undefined){
-    GetRandomEntryFromRedditTable(searchArgument).then(c => console.log(c));
 }
