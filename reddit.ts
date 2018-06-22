@@ -40,7 +40,7 @@ async function getPosts(searchTerm: string, limit: number): Promise<RedditPost[]
 }
 
 function getFirstPostWithRollableEntries(posts: RedditPost[]): RedditPost {
-    const rollableEntryClue = new RegExp(/(table|ol)/i);
+    const rollableEntryClue = new RegExp(/(&lt;table|&lt;ol)/i);
     const firstPost = _.find(posts, (post) => rollableEntryClue.test(post.selftext_html || ""));
     if (firstPost == undefined) {
         throw "Couldn't find any rollable entries.";
