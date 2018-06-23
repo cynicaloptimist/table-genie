@@ -89,10 +89,22 @@ const SearchForTableIntentHandler: Alexa.RequestHandler = {
     }
 }
 
+const WishIntentHandler: Alexa.RequestHandler = {
+    canHandle: (handlerInput) => {
+        return inputRequestIsOfType(handlerInput, ["WishIntent"]);
+    },
+    handle: (handlerInput) => {
+        return handlerInput.responseBuilder
+            .speak(`I'm not <emphasis level="strong">that</emphasis> kind of genie!`)
+            .getResponse();
+    }
+}
+
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         RollDiceIntentHandler,
-        SearchForTableIntentHandler)
+        SearchForTableIntentHandler,
+        WishIntentHandler)
     .lambda();
 
 const handlers: any = {
