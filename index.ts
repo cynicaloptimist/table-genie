@@ -5,7 +5,6 @@ import * as _ from "lodash";
 
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
-const resources = require("./resources");
 import { GetRandomEntryFromRedditTable } from "./reddit";
 
 const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue: string): string => {
@@ -130,61 +129,3 @@ exports.handler = Alexa.SkillBuilders.custom()
         HelpIntentHandler,
         StopIntentHandler)
     .lambda();
-
-const handlers: any = {
-    'NameIntent': function () {
-        const namesByRace = this.t("NAMES");
-        let race = slotOrDefault(this, "Race", "?").toUpperCase();
-        let output = "";
-
-        if (!namesByRace[race]) {
-            output += this.t("RACE_NOT_FOUND", race);
-            race = "HUMAN";
-        }
-
-        const names = _.shuffle(namesByRace[race]);
-
-        const name = names[0];
-
-        output += this.t("SUGGEST_NAME", race, name);
-        this.emit(':tellWithCard', output, this.t("NAME_CARD_TITLE"), output);
-    },
-
-    'SearchForTableIntent': function () {
-        const searchTerm = slotOrDefault(this, "SearchTerm", "");
-        if (!searchTerm.length) {
-            this.emit('RollDiceIntent');
-        }
-
-        GetRandomEntryFromRedditTable(searchTerm)
-            .then(result => {
-                if (result === undefined) {
-                    return;
-                }
-
-                const allRolls = result.rollResults.map(r => `${r.rollPrompt}:\n${r.rollResult}`).join(`\n\n`);
-                this.emit(':tellWithCard',
-                    this.t("ROLLED_ON_TABLE_SPEECH", result.postTitle, allRolls),
-                    result.postTitle,
-                    this.t("ROLLED_ON_TABLE_CARD", result.postUrl, allRolls)
-                );
-            });
-
-    },
-
-    'WishIntent': function () {
-        this.emit(":tell", this.t("WISH_JOKE"));
-    },
-
-    'AMAZON.HelpIntent': function () {
-        const speechOutput = this.t("HELP_MESSAGE");
-        const reprompt = this.t("HELP_MESSAGE");
-        this.emit(':ask', speechOutput, reprompt);
-    },
-    'AMAZON.CancelIntent': function () {
-        this.emit(':tell', this.t("STOP_MESSAGE"));
-    },
-    'AMAZON.StopIntent': function () {
-        this.emit(':tell', this.t("STOP_MESSAGE"));
-    }
-};
