@@ -10,15 +10,18 @@ import { GetRandomEntryFromRedditTable } from "./reddit";
 
 const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue: string): string => {
     const request = input.requestEnvelope.request as IntentRequest;
+
     const slots = request.intent.slots;
     if (slots === undefined) {
         return defaultValue;
     }
+
     const slot = slots.slotName;
-    if (slot && slot.value && slot.value !== "?") {
-        return slot.value;
+    if(slot === undefined || slot.value === undefined || slot.value === "?") {
+        return defaultValue;
     }
-    return defaultValue;
+
+    return slot.value;
 }
 
 const rollDice = (howMany: number, dieSize: number, modifier: number) => {
