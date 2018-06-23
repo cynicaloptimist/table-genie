@@ -29,10 +29,14 @@ const rollDice = (howMany: number, dieSize: number, modifier: number) => {
     return sum + modifier;
 }
 
+const inputRequestIsOfType = (handlerInput: Alexa.HandlerInput, intentTypes: string []) => {
+    const requestType = handlerInput.requestEnvelope.request as IntentRequest;
+    return _.includes(intentTypes, requestType.intent.name);
+}
+
 const RollDiceIntentHandler: Alexa.RequestHandler = {
     canHandle: (handlerInput) => {
-        const requestType = handlerInput.requestEnvelope.request as IntentRequest;
-        return _.includes(["LaunchRequest", "RollDiceIntent"], requestType.intent.name);
+        return inputRequestIsOfType(handlerInput, ["LaunchRequest", "RollDiceIntent"]);
     },
     handle: (handlerInput) => {
         const howMany = parseInt(slotOrDefault(handlerInput, "HowMany", "1"));
@@ -61,27 +65,6 @@ exports.handler = Alexa.SkillBuilders.custom()
     .lambda();
 
 const handlers: any = {
-    'LaunchRequest': function () {
-        this.emit('RollDiceIntent');
-    },
-
-    'RollDiceIntent': function () {
-        const howMany = parseInt(slotOrDefault(this, "HowMany", "1"));
-        const dieSize = parseInt(slotOrDefault(this, "DieSize", "6"));
-        const modifier = parseInt(slotOrDefault(this, "Modifier", "0"));
-
-        const total = rollDice(howMany, dieSize, modifier);
-
-        let output = "";
-        if (modifier) {
-            output = this.t("ROLLED_WITH_MODIFIER", howMany, dieSize, modifier, total);
-        } else {
-            output = this.t("ROLLED", howMany, dieSize, total);
-        }
-
-        this.emit(':tellWithCard', output, this.t("DICE_CARD_TITLE"), output);
-    },
-
     'NameIntent': function () {
         const namesByRace = this.t("NAMES");
         let race = slotOrDefault(this, "Race", "?").toUpperCase();
