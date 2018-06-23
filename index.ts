@@ -16,8 +16,8 @@ const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue
         return defaultValue;
     }
 
-    const slot = slots.slotName;
-    if(slot === undefined || slot.value === undefined || slot.value === "?") {
+    const slot = slots[slotName];
+    if (slot === undefined || slot.value === undefined || slot.value === "?") {
         return defaultValue;
     }
 
@@ -32,7 +32,7 @@ const rollDice = (howMany: number, dieSize: number, modifier: number) => {
     return sum + modifier;
 }
 
-const inputRequestIsOfType = (handlerInput: Alexa.HandlerInput, intentTypes: string []) => {
+const inputRequestIsOfType = (handlerInput: Alexa.HandlerInput, intentTypes: string[]) => {
     const requestType = handlerInput.requestEnvelope.request as IntentRequest;
     return _.includes(intentTypes, requestType.intent.name);
 }
@@ -48,12 +48,14 @@ const RollDiceIntentHandler: Alexa.RequestHandler = {
 
         const total = rollDice(howMany, dieSize, modifier);
 
-        let output = "";
-        if (modifier) {
-            output = `I rolled ${howMany} d ${dieSize} plus ${modifier} for a total of ${total}`;
-        } else {
-            output = `I rolled ${howMany} d ${dieSize} for a total of ${total}`;
+        let modifierPhrase = "";
+        if (modifier > 0) {
+            modifierPhrase = `plus ${modifier}`;
         }
+        if (modifier < 0) {
+            modifierPhrase = `minus ${-modifier}`;
+        }
+        const output = `I rolled ${howMany} d ${dieSize} ${modifierPhrase} for a total of ${total}`;
 
         return handlerInput.responseBuilder
             .speak(output)
