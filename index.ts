@@ -100,6 +100,28 @@ const WishIntentHandler: Alexa.RequestHandler = {
     }
 }
 
+const HelpIntentHandler: Alexa.RequestHandler = {
+    canHandle: (handlerInput) => {
+        return inputRequestIsOfType(handlerInput, ["AMAZON.HelpIntent"]);
+    },
+    handle: (handlerInput) => {
+        return handlerInput.responseBuilder
+            .speak("You can say roll me one d six plus one, or, you can ask for something random, like a random quest or a random potion. What would you like?")
+            .getResponse();
+    }
+}
+
+const StopIntentHandler: Alexa.RequestHandler = {
+    canHandle: (handlerInput) => {
+        return inputRequestIsOfType(handlerInput, ["AMAZON.CancelIntent", "AMAZON.StopIntent"]);
+    },
+    handle: (handlerInput) => {
+        return handlerInput.responseBuilder
+            .speak("Goodbye!")
+            .getResponse();
+    }
+}
+
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         RollDiceIntentHandler,
