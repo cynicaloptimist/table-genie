@@ -126,7 +126,9 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         RollDiceIntentHandler,
         SearchForTableIntentHandler,
-        WishIntentHandler)
+        WishIntentHandler,
+        HelpIntentHandler,
+        StopIntentHandler)
     .lambda();
 
 const handlers: any = {
