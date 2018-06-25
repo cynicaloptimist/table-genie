@@ -8,19 +8,11 @@ const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 import { GetRandomEntryFromRedditTable } from "./reddit";
 
 const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue: string): string => {
-    const request = input.requestEnvelope.request as IntentRequest;
-
-    const slots = request.intent.slots;
-    if (slots === undefined) {
+    const slotValue = _.get(input, `requestEnvelope.request.intent.slots.${slotName}.value`, defaultValue);
+    if(slotValue === "?") {
         return defaultValue;
     }
-
-    const slot = slots[slotName];
-    if (slot === undefined || slot.value === undefined || slot.value === "?") {
-        return defaultValue;
-    }
-
-    return slot.value;
+    return slotValue;    
 }
 
 const rollDice = (howMany: number, dieSize: number, modifier: number) => {
