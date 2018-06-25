@@ -43,7 +43,7 @@ const inputRequestIsOfType = (handlerInput: Alexa.HandlerInput, intentTypes: str
 
 const RollDiceIntentHandler: Alexa.RequestHandler = {
     canHandle: (handlerInput) => {
-        return inputRequestIsOfType(handlerInput, ["LaunchRequest", "RollDiceIntent"]);
+        return inputRequestIsOfType(handlerInput, ["RollDiceIntent"]);
     },
     handle: (handlerInput) => {
         const howMany = parseInt(slotOrDefault(handlerInput, "HowMany", "1"));
@@ -106,11 +106,11 @@ const WishIntentHandler: Alexa.RequestHandler = {
 
 const HelpIntentHandler: Alexa.RequestHandler = {
     canHandle: (handlerInput) => {
-        return inputRequestIsOfType(handlerInput, ["AMAZON.HelpIntent"]);
+        return inputRequestIsOfType(handlerInput, ["LaunchRequest", "AMAZON.HelpIntent"]);
     },
     handle: (handlerInput) => {
         return handlerInput.responseBuilder
-            .speak("You can say roll me one d six plus one, or, you can ask for something random, like a random quest or a random potion. What would you like?")
+            .speak("Welcome to Table Genie! I can roll on a table to generate random content for fantasy RPGs, like a village quest or a mysterious potion. Try saying, Ask Table Genie for a random trinket.")
             .getResponse();
     }
 }
