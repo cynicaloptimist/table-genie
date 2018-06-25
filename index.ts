@@ -1,11 +1,12 @@
 'use strict';
 import * as Alexa from "ask-sdk";
-import { IntentRequest, Response } from "ask-sdk-model";
+import { Request, IntentRequest, Response } from "ask-sdk-model";
 import * as _ from "lodash";
 
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
 import { GetRandomEntryFromRedditTable } from "./reddit";
+import { AlexaForBusiness } from "aws-sdk";
 
 const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue: string): string => {
     const slotValue = _.get(input, `requestEnvelope.request.intent.slots.${slotName}.value`, defaultValue);
@@ -23,9 +24,21 @@ const rollDice = (howMany: number, dieSize: number, modifier: number) => {
     return sum + modifier;
 }
 
+function isIntentRequest(request: Request): request is IntentRequest {
+    return request.type === "IntentRequest";
+}
+
 const inputRequestIsOfType = (handlerInput: Alexa.HandlerInput, intentTypes: string[]) => {
-    const requestType = handlerInput.requestEnvelope.request as IntentRequest;
-    return _.includes(intentTypes, requestType.intent.name);
+    const request = handlerInput.requestEnvelope.request;
+    if(_.includes(intentTypes, request.type)){
+        return true;
+    }
+    
+    if(!isIntentRequest(request)) {
+        return false;
+    }
+
+    return _.includes(intentTypes, request.intent.name);
 }
 
 const RollDiceIntentHandler: Alexa.RequestHandler = {
