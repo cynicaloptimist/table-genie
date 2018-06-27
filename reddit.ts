@@ -56,7 +56,7 @@ function generateRollResultsFromPost(postHtml: string): RollResult[] {
     const orderedLists = $("ol");
     const listResults: RollResult[] = orderedLists.toArray().map(
         list => {
-            const listHeader = $(list).prev("p").children("strong").text();
+            const listHeader = $(list).prev("p").children("strong").text().replace(/d\d+/gi, "");
             const listItems = $(list).children("li").toArray().map(c => $(c).text());;
             const randomEntry = _.sample(listItems);
 
