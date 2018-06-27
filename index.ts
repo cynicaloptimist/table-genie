@@ -121,7 +121,7 @@ const HelpIntentHandler: Alexa.RequestHandler = {
 
 const StopIntentHandler: Alexa.RequestHandler = {
     canHandle: (handlerInput) => {
-        return inputRequestIsOfType(handlerInput, ["AMAZON.CancelIntent", "AMAZON.StopIntent"]);
+        return inputRequestIsOfType(handlerInput, ["SessionEndedRequest", "AMAZON.CancelIntent", "AMAZON.StopIntent", ]);
     },
     handle: (handlerInput) => {
         return handlerInput.responseBuilder
