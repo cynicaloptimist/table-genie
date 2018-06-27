@@ -92,7 +92,7 @@ function generateRollResultsFromPost(postHtml: string): RollResult[] {
     return [...listResults, ...tableResults];
 }
 
-export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<TableResult | undefined> {
+export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<TableResult> {
     const posts = await getPosts(searchTerm, 10);
     if (posts === undefined) {
         throw "Couldn't get posts.";
