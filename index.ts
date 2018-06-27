@@ -87,7 +87,7 @@ const SearchForTableIntentHandler: Alexa.RequestHandler = {
                     .speak(`I rolled from ${result.postTitle} and got ${allRolls}`)
                     .withSimpleCard(result.postTitle, `Post URL: ${result.postUrl}\n\n${allRolls}`)
                     .getResponse();
-            }).then(e => {
+            }).catch(e => {
                 return handlerInput.responseBuilder
                     .speak(`There was a problem rolling on a table for ${searchTerm}.`)
                     .getResponse();
