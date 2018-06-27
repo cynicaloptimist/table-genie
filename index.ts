@@ -77,10 +77,6 @@ const SearchForTableIntentHandler: Alexa.RequestHandler = {
 
         const entry = GetRandomEntryFromRedditTable(searchTerm)
             .then(result => {
-                if (result === undefined) {
-                    return;
-                }
-
                 const allRolls = result.rollResults.map(r => `${r.rollPrompt}:\n${r.rollResult}`).join(`\n\n`);
 
                 return handlerInput.responseBuilder
