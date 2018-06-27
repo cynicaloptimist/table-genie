@@ -13,7 +13,7 @@ const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue
     if (slotValue === "?") {
         return defaultValue;
     }
-    return slotValue;    
+    return slotValue;
 }
 
 const rollDice = (howMany: number, dieSize: number, modifier: number) => {
@@ -33,7 +33,7 @@ const inputRequestIsOfType = (handlerInput: Alexa.HandlerInput, intentTypes: str
     if (_.includes(intentTypes, request.type)) {
         return true;
     }
-    
+
     if (!isIntentRequest(request)) {
         return false;
     }
@@ -87,7 +87,11 @@ const SearchForTableIntentHandler: Alexa.RequestHandler = {
                     .speak(`I rolled from ${result.postTitle} and got ${allRolls}`)
                     .withSimpleCard(result.postTitle, `Post URL: ${result.postUrl}\n\n${allRolls}`)
                     .getResponse();
-            }) as Promise<Response>;
+            }).then(e => {
+                return handlerInput.responseBuilder
+                    .speak(`There was a problem rolling on a table for ${searchTerm}.`)
+                    .getResponse();
+            });
 
         return entry;
     }
