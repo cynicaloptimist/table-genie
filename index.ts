@@ -10,7 +10,7 @@ import { AlexaForBusiness } from "aws-sdk";
 
 const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue: string): string => {
     const slotValue = _.get(input, `requestEnvelope.request.intent.slots.${slotName}.value`, defaultValue);
-    if(slotValue === "?") {
+    if (slotValue === "?") {
         return defaultValue;
     }
     return slotValue;    
@@ -30,11 +30,11 @@ function isIntentRequest(request: Request): request is IntentRequest {
 
 const inputRequestIsOfType = (handlerInput: Alexa.HandlerInput, intentTypes: string[]) => {
     const request = handlerInput.requestEnvelope.request;
-    if(_.includes(intentTypes, request.type)){
+    if (_.includes(intentTypes, request.type)) {
         return true;
     }
     
-    if(!isIntentRequest(request)) {
+    if (!isIntentRequest(request)) {
         return false;
     }
 
