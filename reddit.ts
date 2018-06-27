@@ -39,12 +39,15 @@ async function getPosts(searchTerm: string, limit: number): Promise<RedditPost[]
     }
 }
 
-function getFirstPostWithRollableEntries(posts: RedditPost[]): RedditPost {
-    const rollableEntryClue = new RegExp(/(&lt;table|&lt;ol)/i);
-    const firstPost = _.find(posts, (post) => rollableEntryClue.test(post.selftext_html || ""));
-    if (firstPost == undefined) {
-        throw "Couldn't find any rollable entries.";
-    }
+function getFirstPostWithRollableEntries(posts: RedditPost[]): RedditPost | undefined {
+    const firstPost = _.find(posts, (post: RedditPost) => {
+        if(!post.selftext_html) {
+            return false;
+        }
+        const $ = load(_.unescape(post.selftext_html) || "");
+        return $("ol li").add("table td").length > 0;
+    });
+
     return firstPost;
 }
 
