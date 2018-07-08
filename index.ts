@@ -75,7 +75,7 @@ const SearchForTableIntentHandler: Alexa.RequestHandler = {
     handle: (handlerInput) => {
         const searchTerm = slotOrDefault(handlerInput, "SearchTerm", "");
 
-        console.log("Search Term: ")
+        console.log("Search Term: " + searchTerm);
 
         const entry = GetRandomEntryFromRedditTable(searchTerm)
             .then(result => {
