@@ -20,7 +20,7 @@ interface TableResult {
     rollResults: RollResult[]
 }
 
-const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables+d100/search.json?q=${searchTerm}&restrict_sr=on&sort=relevance&t=all&limit=${limit}`;
+const getSubredditUrl = (searchTerm: string, limit: number) => `https://www.reddit.com/r/BehindTheTables/search.json?q=${searchTerm}&restrict_sr=on&sort=relevance&t=all&limit=${limit}`;
 
 function getPostsFromResponse(response: any): RedditPost[] {
     return response.data.data
@@ -39,12 +39,15 @@ async function getPosts(searchTerm: string, limit: number): Promise<RedditPost[]
     }
 }
 
-function getFirstPostWithRollableEntries(posts: RedditPost[]): RedditPost {
-    const rollableEntryClue = new RegExp(/(&lt;table|&lt;ol)/i);
-    const firstPost = _.find(posts, (post) => rollableEntryClue.test(post.selftext_html || ""));
-    if (firstPost == undefined) {
-        throw "Couldn't find any rollable entries.";
-    }
+function getFirstPostWithRollableEntries(posts: RedditPost[]): RedditPost | undefined {
+    const firstPost = _.find(posts, (post: RedditPost) => {
+        if(!post.selftext_html) {
+            return false;
+        }
+        const $ = load(_.unescape(post.selftext_html) || "");
+        return $("ol li").add("table td").length > 0;
+    });
+
     return firstPost;
 }
 
@@ -53,7 +56,7 @@ function generateRollResultsFromPost(postHtml: string): RollResult[] {
     const orderedLists = $("ol");
     const listResults: RollResult[] = orderedLists.toArray().map(
         list => {
-            const listHeader = $(list).prev("p").children("strong").text();
+            const listHeader = $(list).prev("p").children("strong").text().replace(/d\d+/gi, "");
             const listItems = $(list).children("li").toArray().map(c => $(c).text());;
             const randomEntry = _.sample(listItems);
 
@@ -89,7 +92,7 @@ function generateRollResultsFromPost(postHtml: string): RollResult[] {
     return [...listResults, ...tableResults];
 }
 
-export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<TableResult | undefined> {
+export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<TableResult> {
     const posts = await getPosts(searchTerm, 10);
     if (posts === undefined) {
         throw "Couldn't get posts.";

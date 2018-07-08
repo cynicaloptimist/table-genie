@@ -21,13 +21,12 @@
   "author": "Evan Bailey",
   "license": "MIT",
   "dependencies": {
-    "alexa-sdk": "^1.0.25",
+    "ask-sdk": "^2.0.6",
     "axios": "^0.18.0",
     "cheerio": "^1.0.0-rc.2",
     "lodash": "^4.17.10"
   },
   "devDependencies": {
-    "@types/alexa-sdk": "^1.1.1",
     "@types/cheerio": "^0.22.7",
     "@types/jest": "^23.1.1",
     "@types/lodash": "^4.14.110",
