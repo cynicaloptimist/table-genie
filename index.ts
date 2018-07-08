@@ -77,12 +77,17 @@ const handlers: any = {
             this.emit('RollDiceIntent');
         }
 
+        console.log("Search Term: ")
+        
         GetRandomEntryFromRedditTable(searchTerm)
             .then(result => {
                 if (result === undefined) {
                     return;
                 }
 
+                console.log("Post title: " + result.postTitle);
+                console.log("Post url: " + result.postUrl);
+                
                 const allRolls = result.rollResults.map(r => `${r.rollPrompt}: ${r.rollResult}`).join(`<break strength="strong" />`);
                 this.emit(':tellWithCard',
                     this.t("ROLLED_ON_TABLE_SPEECH", result.postTitle, allRolls),

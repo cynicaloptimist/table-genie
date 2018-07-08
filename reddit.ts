@@ -98,8 +98,7 @@ export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise
     if (firstPost === undefined) {
         throw "Couldn't find any rollable tables.";
     }
-    console.log("Post title: " + firstPost.title);
-    console.log("Post url: " + firstPost.url);
+    
     const rollResults = generateRollResultsFromPost(_.unescape(firstPost.selftext_html));
     return {
         postTitle: firstPost.title,
