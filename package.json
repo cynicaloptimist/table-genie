@@ -30,6 +30,7 @@
     "@types/cheerio": "^0.22.7",
     "@types/jest": "^23.1.1",
     "@types/lodash": "^4.14.110",
+    "adm-zip": "^0.4.11",
     "copy-node-modules": "^1.0.6",
     "jest": "^23.1.0",
     "lambda-local": "^1.4.2",
