@@ -1,12 +1,11 @@
 'use strict';
 import * as Alexa from "ask-sdk";
-import { Request, IntentRequest, Response } from "ask-sdk-model";
+import { Request, IntentRequest } from "ask-sdk-model";
 import * as _ from "lodash";
 
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
 import { GetRandomEntryFromRedditTable } from "./reddit";
-import { AlexaForBusiness } from "aws-sdk";
 
 const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue: string): string => {
     const slotValue = _.get(input, `requestEnvelope.request.intent.slots.${slotName}.value`, defaultValue);
