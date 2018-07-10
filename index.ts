@@ -134,6 +134,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         RollDiceIntentHandler,
         SearchForTableIntentHandler,
+        RerollOnTableIntentHandler,
         WishIntentHandler,
         HelpIntentHandler,
         StopIntentHandler)
