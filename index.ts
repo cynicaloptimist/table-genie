@@ -5,7 +5,12 @@ import * as _ from "lodash";
 
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
-import { GetRandomEntryFromRedditTable, GetRedditTableFromSearchTerm, GenerateRollResultsFromPost } from "./reddit";
+import { GetRedditTableFromSearchTerm, GenerateRollResultsFromPost, RedditPost, RollResult } from "./reddit";
+
+interface SessionAttributes {
+    lastPost: RedditPost;
+    lastResult: RollResult [];
+}
 
 const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue: string): string => {
     const slotValue = _.get(input, `requestEnvelope.request.intent.slots.${slotName}.value`, defaultValue);
@@ -86,6 +91,13 @@ const SearchForTableIntentHandler: Alexa.RequestHandler = {
         const rollableHtml = _.unescape(table.selftext_html);
 
         const rollResults = GenerateRollResultsFromPost(rollableHtml);
+
+        const session: SessionAttributes = {
+            lastPost: table,
+            lastResult: rollResults
+        };
+        
+        handlerInput.attributesManager.setSessionAttributes(session);
 
         const allRolls = rollResults.map(r => `${r.rollPrompt}:\n${r.rollResult}`).join(`\n\n`);
 

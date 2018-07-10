@@ -2,14 +2,14 @@ import * as _ from "lodash";
 import axios from "axios";
 import { load } from "cheerio";
 
-interface RedditPost {
+export interface RedditPost {
     title: string;
     url: string;
     selftext?: string;
     selftext_html?: string;
 }
 
-interface RollResult {
+export interface RollResult {
     rollPrompt: string;
     rollResult: string;
 }
