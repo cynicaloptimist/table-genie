@@ -6,18 +6,11 @@ import * as _ from "lodash";
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
 import { GetRedditTableFromSearchTerm, GenerateRollResultsFromPost, RedditPost, RollResult } from "./reddit";
+import { inputRequestIsOfType, slotOrDefault } from "./AlexaHelpers";
 
 interface SessionAttributes {
     lastPost: RedditPost;
-    lastResult: RollResult [];
-}
-
-const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue: string): string => {
-    const slotValue = _.get(input, `requestEnvelope.request.intent.slots.${slotName}.value`, defaultValue);
-    if (slotValue === "?") {
-        return defaultValue;
-    }
-    return slotValue;
+    lastResult: RollResult[];
 }
 
 const rollDice = (howMany: number, dieSize: number, modifier: number) => {
@@ -26,23 +19,6 @@ const rollDice = (howMany: number, dieSize: number, modifier: number) => {
         sum += _.random(1, dieSize);
     }
     return sum + modifier;
-}
-
-function isIntentRequest(request: Request): request is IntentRequest {
-    return request.type === "IntentRequest";
-}
-
-const inputRequestIsOfType = (handlerInput: Alexa.HandlerInput, intentTypes: string[]) => {
-    const request = handlerInput.requestEnvelope.request;
-    if (_.includes(intentTypes, request.type)) {
-        return true;
-    }
-
-    if (!isIntentRequest(request)) {
-        return false;
-    }
-
-    return _.includes(intentTypes, request.intent.name);
 }
 
 const RollDiceIntentHandler: Alexa.RequestHandler = {
