@@ -1,6 +1,5 @@
 'use strict';
 import * as Alexa from "ask-sdk";
-import { Request, IntentRequest } from "ask-sdk-model";
 import * as _ from "lodash";
 
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
@@ -48,6 +47,23 @@ const RollDiceIntentHandler: Alexa.RequestHandler = {
     }
 }
 
+function RollOnTable(table: RedditPost, handlerInput: Alexa.HandlerInput) {
+    const rollableHtml = _.unescape(table.selftext_html);
+    const rollResults = GenerateRollResultsFromPost(rollableHtml);
+    const session: SessionAttributes = {
+        lastPost: table,
+        lastResult: rollResults
+    };
+    handlerInput.attributesManager.setSessionAttributes(session);
+    const allRolls = rollResults.map(r => `${r.rollPrompt}:\n${r.rollResult}`).join(`\n\n`);
+    console.log("Post title: " + table.title);
+    console.log("Post url: " + table.url);
+    return handlerInput.responseBuilder
+        .speak(`I rolled from ${table.title} and got ${allRolls}`)
+        .withSimpleCard(table.title, `Post URL: ${table.url}\n\n${allRolls}`)
+        .getResponse();
+}
+
 const SearchForTableIntentHandler: Alexa.RequestHandler = {
     canHandle: (handlerInput) => {
         return inputRequestIsOfType(handlerInput, ["SearchForTableIntent"]);
@@ -64,26 +80,20 @@ const SearchForTableIntentHandler: Alexa.RequestHandler = {
                 .getResponse();
         }
 
-        const rollableHtml = _.unescape(table.selftext_html);
+        return RollOnTable(table, handlerInput);
+    }
+}
 
-        const rollResults = GenerateRollResultsFromPost(rollableHtml);
+const RerollOnTableIntentHandler: Alexa.RequestHandler = {
+    canHandle: (handlerInput) => inputRequestIsOfType(handlerInput, ["AMAZON.YesIntent"]),
+    handle: (handlerInput) => {
+        const session = handlerInput.attributesManager.getSessionAttributes() as SessionAttributes;
+        if (!(session && session.lastPost)) {
+            return handlerInput.responseBuilder.speak("Couldn't read session.").getResponse();
+        }
 
-        const session: SessionAttributes = {
-            lastPost: table,
-            lastResult: rollResults
-        };
-        
-        handlerInput.attributesManager.setSessionAttributes(session);
+        return RollOnTable(session.lastPost, handlerInput);
 
-        const allRolls = rollResults.map(r => `${r.rollPrompt}:\n${r.rollResult}`).join(`\n\n`);
-
-        console.log("Post title: " + table.title);
-        console.log("Post url: " + table.url);
-
-        return handlerInput.responseBuilder
-            .speak(`I rolled from ${table.title} and got ${allRolls}`)
-            .withSimpleCard(table.title, `Post URL: ${table.url}\n\n${allRolls}`)
-            .getResponse();
     }
 }
 
