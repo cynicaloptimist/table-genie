@@ -72,29 +72,27 @@ const SearchForTableIntentHandler: Alexa.RequestHandler = {
     canHandle: (handlerInput) => {
         return inputRequestIsOfType(handlerInput, ["SearchForTableIntent"]);
     },
-    handle: (handlerInput) => {
+    handle: async (handlerInput) => {
         const searchTerm = slotOrDefault(handlerInput, "SearchTerm", "");
 
         console.log("Search Term: " + searchTerm);
 
-        const entry = GetRandomEntryFromRedditTable(searchTerm)
-            .then(result => {
-                const allRolls = result.rollResults.map(r => `${r.rollPrompt}:\n${r.rollResult}`).join(`\n\n`);
+        const entry = await GetRandomEntryFromRedditTable(searchTerm);
+        if (entry === undefined) {
+            return handlerInput.responseBuilder
+                .speak(`There was a problem rolling on a table for ${searchTerm}.`)
+                .getResponse();
+        }
 
-                console.log("Post title: " + result.postTitle);
-                console.log("Post url: " + result.postUrl);
+        const allRolls = entry.rollResults.map(r => `${r.rollPrompt}:\n${r.rollResult}`).join(`\n\n`);
 
-                return handlerInput.responseBuilder
-                    .speak(`I rolled from ${result.postTitle} and got ${allRolls}`)
-                    .withSimpleCard(result.postTitle, `Post URL: ${result.postUrl}\n\n${allRolls}`)
-                    .getResponse();
-            }).catch(e => {
-                return handlerInput.responseBuilder
-                    .speak(`There was a problem rolling on a table for ${searchTerm}.`)
-                    .getResponse();
-            });
+        console.log("Post title: " + entry.postTitle);
+        console.log("Post url: " + entry.postUrl);
 
-        return entry;
+        return handlerInput.responseBuilder
+            .speak(`I rolled from ${entry.postTitle} and got ${allRolls}`)
+            .withSimpleCard(entry.postTitle, `Post URL: ${entry.postUrl}\n\n${allRolls}`)
+            .getResponse();
     }
 }
 
@@ -122,7 +120,7 @@ const HelpIntentHandler: Alexa.RequestHandler = {
 
 const StopIntentHandler: Alexa.RequestHandler = {
     canHandle: (handlerInput) => {
-        return inputRequestIsOfType(handlerInput, ["SessionEndedRequest", "AMAZON.CancelIntent", "AMAZON.StopIntent", ]);
+        return inputRequestIsOfType(handlerInput, ["SessionEndedRequest", "AMAZON.CancelIntent", "AMAZON.StopIntent",]);
     },
     handle: (handlerInput) => {
         return handlerInput.responseBuilder
