@@ -5,7 +5,7 @@ import * as _ from "lodash";
 
 const APP_ID = "amzn1.ask.skill.f35f4e73-39b6-4631-af07-824fecad3215";
 
-import { GetRandomEntryFromRedditTable } from "./reddit";
+import { GetRandomEntryFromRedditTable, GetRedditTableFromSearchTerm, GenerateRollResultsFromPost } from "./reddit";
 
 const slotOrDefault = (input: Alexa.HandlerInput, slotName: string, defaultValue: string): string => {
     const slotValue = _.get(input, `requestEnvelope.request.intent.slots.${slotName}.value`, defaultValue);
@@ -76,21 +76,25 @@ const SearchForTableIntentHandler: Alexa.RequestHandler = {
 
         console.log("Search Term: " + searchTerm);
 
-        const entry = await GetRandomEntryFromRedditTable(searchTerm);
-        if (entry === undefined) {
+        const table = await GetRedditTableFromSearchTerm(searchTerm);
+        if (table === undefined) {
             return handlerInput.responseBuilder
                 .speak(`There was a problem rolling on a table for ${searchTerm}.`)
                 .getResponse();
         }
 
-        const allRolls = entry.rollResults.map(r => `${r.rollPrompt}:\n${r.rollResult}`).join(`\n\n`);
+        const rollableHtml = _.unescape(table.selftext_html);
 
-        console.log("Post title: " + entry.postTitle);
-        console.log("Post url: " + entry.postUrl);
+        const rollResults = GenerateRollResultsFromPost(rollableHtml);
+
+        const allRolls = rollResults.map(r => `${r.rollPrompt}:\n${r.rollResult}`).join(`\n\n`);
+
+        console.log("Post title: " + table.title);
+        console.log("Post url: " + table.url);
 
         return handlerInput.responseBuilder
-            .speak(`I rolled from ${entry.postTitle} and got ${allRolls}`)
-            .withSimpleCard(entry.postTitle, `Post URL: ${entry.postUrl}\n\n${allRolls}`)
+            .speak(`I rolled from ${table.title} and got ${allRolls}`)
+            .withSimpleCard(table.title, `Post URL: ${table.url}\n\n${allRolls}`)
             .getResponse();
     }
 }
