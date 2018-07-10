@@ -11,7 +11,7 @@
     "test": "lambda-local -l ./dist/index.js -e sample_dice.js",
     "test:name": "lambda-local -l ./dist/index.js -e sample_name.js",
     "test:trinket": "lambda-local -l ./dist/index.js -e sample_trinket.js",
-    "build": "tsc && copy-node-modules ./ ./dist/ && rm -r ./dist/node_modules/aws-sdk"
+    "build": "tsc && copy-node-modules ./ ./dist/ && rm -r ./dist/node_modules/aws-sdk && node build-zip-file.js"
   },
   "keywords": [
     "alexa",
