@@ -51,7 +51,7 @@ function getFirstPostWithRollableEntries(posts: RedditPost[]): RedditPost | unde
     return firstPost;
 }
 
-function generateRollResultsFromPost(postHtml: string): RollResult[] {
+export function GenerateRollResultsFromPost(postHtml: string): RollResult[] {
     const $ = load(postHtml);
     const orderedLists = $("ol");
     const listResults: RollResult[] = orderedLists.toArray().map(
@@ -109,7 +109,7 @@ export async function GetRedditTableFromSearchTerm(searchTerm: string): Promise<
 export async function GetRandomEntryFromRedditTable(searchTerm: string): Promise<TableResult> {
     const firstPost = await GetRedditTableFromSearchTerm(searchTerm);
 
-    const rollResults = generateRollResultsFromPost(_.unescape(firstPost.selftext_html));
+    const rollResults = GenerateRollResultsFromPost(_.unescape(firstPost.selftext_html));
     return {
         postTitle: firstPost.title,
         postUrl: firstPost.url,
