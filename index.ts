@@ -61,6 +61,8 @@ function RollOnTable(table: RedditPost, handlerInput: Alexa.HandlerInput) {
     return handlerInput.responseBuilder
         .speak(`I rolled from ${table.title} and got ${allRolls}`)
         .withSimpleCard(table.title, `Post URL: ${table.url}\n\n${allRolls}`)
+        .speak("Would you to roll another?")
+        .reprompt(`Would you like to roll another entry from ${table.title}?`)
         .getResponse();
 }
 
